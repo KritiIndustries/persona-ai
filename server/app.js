@@ -6,8 +6,32 @@ const chatRoute = require("./routes/chat");
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://persona-ai-client.onrender.com/",
+    process.env.CLIENT_URL,
+].filter(Boolean);
+
+app.use(cors({
+    origin(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error(`Not allowed by CORS: ${origin}`));
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
 app.use(express.json());
+
+app.get("/", (req, res) => {
+    res.json({
+        success: true,
+        message: "Persona AI server is running",
+    });
+});
 
 app.use("/api/chat", chatRoute);
 
