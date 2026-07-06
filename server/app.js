@@ -8,17 +8,19 @@ const app = express();
 
 const allowedOrigins = [
     "http://localhost:5173",
-    "https://persona-ai-client.onrender.com/",
+    "https://persona-ai-client.onrender.com",
     process.env.CLIENT_URL,
-].filter(Boolean);
+].filter(Boolean).map(origin => origin.replace(/\/$/, ""));
 
 app.use(cors({
     origin(origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
+        const normalizedOrigin = origin?.replace(/\/$/, "");
+
+        if (!normalizedOrigin || allowedOrigins.includes(normalizedOrigin)) {
             return callback(null, true);
         }
 
-        return callback(new Error(`Not allowed by CORS: ${origin}`));
+        return callback(null, false);
     },
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
