@@ -38,9 +38,9 @@ function Chat({ persona, onToggleSidebar }) {
         setInput("");
         if (textareaRef.current) textareaRef.current.style.height = "auto";
         setLoading(true);
-
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
         try {
-            const res = await axios.post("http://localhost:5000/api/chat", {
+            const res = await axios.post(`${API_URL}/api/chat`, {
                 persona,
                 message: text,
             });
@@ -136,7 +136,7 @@ function Chat({ persona, onToggleSidebar }) {
                     </button>
                 </div>
                 <p className="mx-auto mt-2 max-w-3xl text-center text-xs text-gray-500">
-                     Created By Vinod
+                    Created By Vinod
                 </p>
             </div>
         </div>
